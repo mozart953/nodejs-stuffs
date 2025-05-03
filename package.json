@@ -1,0 +1,12 @@
+{
+  "name": "ejemplo-cursor",
+  "version": "1.0.0",
+  "description": "This is a basic Flask API structure that can be used as a starting point for your project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
