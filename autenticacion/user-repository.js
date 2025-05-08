@@ -51,7 +51,9 @@ export class UserRepository{
             throw new Error('La contraseña es incorrecta')
         }
 
-        return user
+        const {password: _, ...userWithoutPassword} = user
+        
+        return userWithoutPassword
         
     }
 }
