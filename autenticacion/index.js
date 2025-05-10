@@ -25,7 +25,7 @@ app.post('/login', async (req, res)=>{
     try{
         const user = await UserRepository.login({username, password})
         const token = jwt.sign({id: user._id, username: user.username}, JWT_SECRET,{expiresIn: '1h'})
-        res.send({user}) 
+        res.send({user, token}) 
     }catch(error){
         res.status(400).send(error.message)
     }
