@@ -9,18 +9,34 @@
 
 </head>
 <body>
+    
+    <% 
+        if(typeof username !== 'undefined'){%>
+            <div>
+                <div class="form-container">
+                    <h1>Hola <%= username %></h1>
+                    <p>Estas en el panel de administracion</p>
+                    <button type="submit" id="close-session">Cerrar sesion</button>
+                </div>
+            </div>
+            <%
+        }
+    %>
 
-
-
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
-        <form id="loginForm">
-            <input type="text" name="username" placeholder="Usuario" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <button type="submit">Entrar</button>
-        </form>
-        <p id="message"></p>
-    </div>
+    <%  
+        if(typeof username == 'undefined'){%>
+            <div class="login-container">
+                <h2>Iniciar Sesión</h2>
+                <form id="loginForm">
+                    <input type="text" name="username" placeholder="Usuario" required>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <button type="submit">Entrar</button>
+                </form>
+                <p id="message"></p>
+            </div>
+            <%
+        }
+    %>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -46,6 +62,24 @@
                 window.location.href = "/protected"; // ejemplo de redirección
             }
         });
+
+        document.addEventListener("DOMContentLoaded", () => {
+                const closeBtn = document.getElementById('close-session');
+                if (closeBtn) {
+                    closeBtn.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+
+                        const response = await fetch('/logout', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                        });
+
+                        if (response.ok) {
+                            window.location.href = "/login";
+                        }
+                    });
+                }
+            });
     </script>
 </body>
 </html>

@@ -11,9 +11,50 @@ app.use(express.static('public'));
 app.use(express.json())
 app.use(cookieParser())
 
+app.use((req, res, next)=>{
+    const token = req.cookies.my_cookie
+    //console.log(token)
+        
+    req.session = {user:null}
+
+    try{
+        const data = jwt.verify(token, JWT_SECRET)
+        console.log(data)
+        req.session.user = data
+
+    }catch(error){
+        req.session.user = null
+    }
+    
+    next()
+})
+
 
 app.get('/', (req, res) => {
-    res.render('login')
+    console.log(req.session)
+    const {user} = req.session
+    console.log(user)
+
+    res.render('login', user)
+   
+    
+    /*const token = req.cookies.my_cookie
+
+    if(!token){
+        return res.render('login')
+    }
+
+    try{
+        const decoded = jwt.verify(token, JWT_SECRET)
+        const {username, ...body1} = decoded
+        
+        console.log(username)
+        res.render('login', {username:username})
+
+    }catch(error){
+        res.render('login')
+    }*/
+    
 })
 
 
@@ -51,14 +92,29 @@ app.post('/register', async (req, res) =>{
 
 })
 
-app.post('/logout', (req, res) =>{})
+app.post('/logout', (req, res) =>{
+    res.clearCookie('my_cookie').json({message:'logout successful'})
+})
 
 app.get('/protected', (req, res) => {
-    const token = req.cookies.my_token
-    if(!token){
+    const {user} = req.session
+
+    if(!user){
         return res.status(403).send('Access not authorized')
     }
-    res.render('protected')
+
+    res.render('protected', user)
+    
+    /*const token = req.cookies.my_cookie
+    const decoded = jwt.verify(token, JWT_SECRET)
+    const {username, ...body1} = decoded
+   
+    console.log(username)
+
+    if(!token){
+            return res.status(403).send('Access not authorized')
+   }
+    res.render('protected',{username:username})*/
 })
 
 app.listen(PORT, () => {
